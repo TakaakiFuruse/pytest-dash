@@ -1,0 +1,8 @@
+dash
+dash-html-components
+dash-core-components
+pytest
+pytest-selenium
+requests
+flask
+percy
