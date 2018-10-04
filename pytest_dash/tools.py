@@ -9,6 +9,10 @@ import requests
 import percy
 
 
+class NoAppFoundError(Exception):
+    """No `app` was found in the file."""
+
+
 @pytest.fixture(scope='package')
 def percy_snapshot(selenium):
 
@@ -69,8 +73,15 @@ def dash_from_file():
     """
 
     def import_app(app_file):
-        app_file = runpy.run_path(app_file)
-        app = app_file['app']
+        try:
+            app_module = runpy.run_path(app_file)
+            app = app_module['app']
+        except KeyError:
+            raise NoAppFoundError(
+                'No dash `app` instance was found in {}'.format(app_file)
+            )
+        except IOError:
+            raise
         return app
 
     yield import_app
