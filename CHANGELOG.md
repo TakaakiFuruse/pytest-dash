@@ -2,6 +2,11 @@
 
 Versions follow [Semantic Versioning](https://www.semver.org)
 
+## [0.1.2] 2018-10-04
+### Fixed
+
+- Better error for missing app in `dash_from_file` fixture.
+
 ## [0.1.1] 2018-10-04
 ### Fixed
 
