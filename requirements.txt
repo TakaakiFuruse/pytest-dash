@@ -1,6 +1,7 @@
 dash
 dash-html-components
 dash-core-components
+selenium
 pytest
 pytest-selenium
 requests
