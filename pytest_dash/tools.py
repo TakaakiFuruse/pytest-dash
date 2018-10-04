@@ -8,6 +8,10 @@ import flask
 import requests
 import percy
 
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.select import By
+
 
 class NoAppFoundError(Exception):
     """No `app` was found in the file."""
@@ -56,6 +60,10 @@ def start_dash(selenium):
         t.start()
         time.sleep(3)
         selenium.get('http://localhost:8050')
+
+        # Wait until the react-entry-point is loaded.
+        WebDriverWait(selenium, 10).until(
+            EC.presence_of_element_located((By.ID, 'react-entry-point')))
 
         return app
 
