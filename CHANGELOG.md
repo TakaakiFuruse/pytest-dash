@@ -2,15 +2,20 @@
 
 Versions follow [Semantic Versioning](https://www.semver.org)
 
+## [0.1.3] 2018-10-04
+### Fixed
+
+- Ensure the page is loaded after starting the app. [#6](https://github.com/T4rk1n/pytest-dash/pull/6)
+
 ## [0.1.2] 2018-10-04
 ### Fixed
 
-- Better error for missing app in `dash_from_file` fixture.
+- Better error for missing app in `dash_from_file` fixture. [#5](https://github.com/T4rk1n/pytest-dash/pull/5)
 
 ## [0.1.1] 2018-10-04
 ### Fixed
 
-- Added fixtures usage examples to the README.
+- Added fixtures usage examples to the README. [#4](https://github.com/T4rk1n/pytest-dash/pull/4)
 - Fixed setup.cfg classifiers.
 
 ## [0.1.0] 2018-10-03
