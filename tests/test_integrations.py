@@ -1,6 +1,6 @@
 import time
 
-from pytest_dash.tools import start_dash, dash_from_file, NoAppFoundError
+from pytest_dash.tools import start_dash, dash_from_file, NoAppFoundError, dash_subprocess
 
 
 def test_run_app(dash_app, selenium):
@@ -19,3 +19,11 @@ def test_no_app_found(dash_from_file):
         error = e
 
     assert isinstance(error, NoAppFoundError)
+
+
+def test_subprocess(dash_subprocess, selenium):
+    dash_subprocess('test_apps.simple_app')
+
+    value_input = selenium.find_element_by_id('value')
+    value_input.clear()
+    value_input.send_keys('Hello dash subprocess')

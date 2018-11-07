@@ -1,7 +1,17 @@
+from __future__ import print_function
+
 import runpy
 import threading
 import time
 import sys
+import subprocess
+import shlex
+
+try:
+    from queue import Queue, Empty
+except ImportError:
+    from Queue import Queue, Empty
+
 
 import pytest
 import flask
@@ -15,6 +25,29 @@ from selenium.webdriver.support.select import By
 
 class NoAppFoundError(Exception):
     """No `app` was found in the file."""
+
+
+def import_app(app_file):
+    try:
+        app_module = runpy.run_path(app_file)
+        app = app_module['app']
+    except KeyError:
+        raise NoAppFoundError(
+            'No dash `app` instance was found in {}'.format(app_file)
+        )
+    return app
+
+
+def _stop_server():
+    stopper = flask.request.environ['werkzeug.server.shutdown']
+    stopper()
+    return 'stop'
+
+
+def _wait_for_client_app_started(driver):
+    # Wait until the react-entry-point is loaded.
+    WebDriverWait(driver, 10).until(
+        EC.presence_of_element_located((By.ID, 'react-entry-point')))
 
 
 @pytest.fixture(scope='package')
@@ -44,11 +77,8 @@ def start_dash(selenium):
 
     def create_app(app):
 
-        @app.server.route('/stop')
-        def _stop_server():
-            stopper = flask.request.environ['werkzeug.server.shutdown']
-            stopper()
-            return 'stop'
+        if '/stop' not in app.server.view_functions:
+            app.server.add_url_rule('/stop', '/stop', _stop_server)
 
         def run():
             app.scripts.config.serve_locally = True
@@ -60,10 +90,7 @@ def start_dash(selenium):
         t.start()
         time.sleep(3)
         selenium.get('http://localhost:8050')
-
-        # Wait until the react-entry-point is loaded.
-        WebDriverWait(selenium, 10).until(
-            EC.presence_of_element_located((By.ID, 'react-entry-point')))
+        _wait_for_client_app_started(selenium)
 
         return app
 
@@ -79,24 +106,11 @@ def dash_from_file():
     Import a dash app from a filepath, the imported file must have a Dash
     instance named `app`
     """
-
-    def import_app(app_file):
-        try:
-            app_module = runpy.run_path(app_file)
-            app = app_module['app']
-        except KeyError:
-            raise NoAppFoundError(
-                'No dash `app` instance was found in {}'.format(app_file)
-            )
-        except IOError:
-            raise
-        return app
-
     yield import_app
 
 
 @pytest.fixture
-def dash_app(dash_from_file, start_dash):
+def dash_app(start_dash):
     """
     Import a dash app from a file, then start the process.
 
@@ -106,8 +120,69 @@ def dash_app(dash_from_file, start_dash):
     """
 
     def _starter(app_file):
-        app = dash_from_file(app_file)
+        app = import_app(app_file)
         start_dash(app)
         return app
 
     yield _starter
+
+
+@pytest.fixture
+def dash_subprocess(selenium):
+    process = None
+    queue = Queue()
+
+    def _enqueue(out):
+        for line in iter(out.readline, b''):
+            queue.put(line)
+        out.close()
+
+    def _sub(app_module):
+        global process
+
+        server_path = '{}:app.server'.format(app_module)
+        print(server_path)
+
+        status = None
+        started = False
+        is_windows = sys.platform == 'win32'
+
+        cmd = 'waitress-serve --listen=127.0.0.1:8050 {}'.format(
+            server_path
+        )
+        line = shlex.split(cmd, posix=not is_windows)
+
+        process = subprocess.Popen(line,
+                                   bufsize=1,
+                                   shell=is_windows,
+                                   stdout=subprocess.PIPE,
+                                   stderr=subprocess.PIPE)
+        queue_thread = threading.Thread(
+            target=_enqueue,
+            args=(process.stdout,),
+        )
+        queue_thread.daemon = True
+        queue_thread.start()
+
+        while not started and status is None:
+            status = process.poll()
+            try:
+                out = queue.get(timeout=.1)
+                out = out.decode()
+                if 'Serving on' in out:
+                    started = True
+
+            except Empty:
+                pass
+
+        if status is not None:
+            _, err = process.communicate()
+            print(err.decode(), file=sys.stderr)
+            raise Exception('Could not start the server.')
+
+        selenium.get('http://localhost:8050/')
+        _wait_for_client_app_started(selenium)
+
+    yield _sub
+
+    process.terminate()
