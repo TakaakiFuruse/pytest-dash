@@ -76,7 +76,6 @@ def dash_threaded(selenium):
     """
 
     def create_app(app):
-
         if '/stop' not in app.server.view_functions:
             app.server.add_url_rule('/stop', '/stop', _stop_server)
 
@@ -129,17 +128,17 @@ def dash_app(dash_threaded):
 
 @pytest.fixture
 def dash_subprocess(selenium):
-    process = None
-    queue = Queue()
+    namespace = {
+        'process': None,
+        'queue': Queue()
+    }
 
     def _enqueue(out):
         for line in iter(out.readline, b''):
-            queue.put(line)
+            namespace['queue'].put(line)
         out.close()
 
     def _sub(app_module):
-        global process
-
         server_path = '{}:app.server'.format(app_module)
         print(server_path)
 
@@ -152,11 +151,14 @@ def dash_subprocess(selenium):
         )
         line = shlex.split(cmd, posix=not is_windows)
 
-        process = subprocess.Popen(line,
-                                   bufsize=1,
-                                   shell=is_windows,
-                                   stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE)
+        # noinspection PyTypeChecker
+        process = namespace['process'] = \
+            subprocess.Popen(line,
+                             bufsize=1,
+                             shell=is_windows,
+                             stdout=subprocess.PIPE,
+                             stderr=subprocess.PIPE)
+        
         queue_thread = threading.Thread(
             target=_enqueue,
             args=(process.stdout,),
@@ -167,7 +169,7 @@ def dash_subprocess(selenium):
         while not started and status is None:
             status = process.poll()
             try:
-                out = queue.get(timeout=.1)
+                out = namespace['queue'].get(timeout=.1)
                 out = out.decode()
                 if 'Serving on' in out:
                     started = True
@@ -185,4 +187,4 @@ def dash_subprocess(selenium):
 
     yield _sub
 
-    process.terminate()
+    namespace['process'].kill()
