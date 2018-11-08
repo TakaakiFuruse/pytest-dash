@@ -67,7 +67,7 @@ def percy_snapshot(selenium):
 
 
 @pytest.fixture
-def start_dash(selenium):
+def dash_threaded(selenium):
     """
     Start a local dash server in a new thread. Stop the server in teardown.
 
@@ -110,7 +110,7 @@ def dash_from_file():
 
 
 @pytest.fixture
-def dash_app(start_dash):
+def dash_app(dash_threaded):
     """
     Import a dash app from a file, then start the process.
 
@@ -121,7 +121,7 @@ def dash_app(start_dash):
 
     def _starter(app_file):
         app = import_app(app_file)
-        start_dash(app)
+        dash_threaded(app)
         return app
 
     yield _starter

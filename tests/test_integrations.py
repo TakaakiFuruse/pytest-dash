@@ -1,6 +1,6 @@
 import time
 
-from pytest_dash.tools import start_dash, dash_from_file, NoAppFoundError, dash_subprocess
+from pytest_dash.tools import dash_threaded, dash_from_file, NoAppFoundError, dash_subprocess
 
 
 def test_run_app(dash_app, selenium):
