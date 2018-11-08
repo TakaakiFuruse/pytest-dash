@@ -155,7 +155,7 @@ def dash_subprocess(selenium):
         process = namespace['process'] = \
             subprocess.Popen(line,
                              bufsize=1,
-                             shell=is_windows,
+                             creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
 
@@ -188,3 +188,5 @@ def dash_subprocess(selenium):
     yield _sub
 
     namespace['process'].kill()
+    while not namespace['process'].poll():
+        time.sleep(0.01)
