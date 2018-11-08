@@ -1,13 +1,46 @@
 import time
 
+try:
+    from queue import Queue, Empty
+except ImportError:
+    from Queue import Queue, Empty
+
+import dash
+from dash.dependencies import Output, Input
+from dash.exceptions import PreventUpdate
+import dash_html_components as html
+
 from pytest_dash.tools import dash_threaded, dash_from_file, NoAppFoundError, dash_subprocess
 
 
-def test_run_app(dash_app, selenium):
-    dash_app('test_apps/simple_app.py')
+def test_dash_threaded(dash_threaded, selenium):
+    app = dash.Dash(__name__)
 
-    selenium.get('http://localhost:8050')
-    time.sleep(1)
+    app.layout = html.Div([
+        html.Button('click me', id='clicker'),
+        html.Div(id='output')
+    ])
+
+    call_count = Queue()
+
+    @app.callback(Output('output', 'children'),
+                  [Input('clicker', 'n_clicks')])
+    def on_click(n_clicks):
+        call_count.put(1)
+        if n_clicks is None:
+            raise PreventUpdate
+
+        return n_clicks
+
+    dash_threaded(app)
+
+    clicker = selenium.find_element_by_id('clicker')
+
+    for i in range(6):
+        clicker.click()
+        time.sleep(1)
+
+    assert call_count.qsize() == 7
 
 
 def test_no_app_found(dash_from_file):
