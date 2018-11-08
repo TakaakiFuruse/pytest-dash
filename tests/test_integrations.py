@@ -22,7 +22,7 @@ def test_no_app_found(dash_from_file):
 
 
 def test_subprocess(dash_subprocess, selenium):
-    dash_subprocess('test_apps.simple_app')
+    dash_subprocess('test_apps/simple_app')
 
     value_input = selenium.find_element_by_id('value')
     value_input.clear()

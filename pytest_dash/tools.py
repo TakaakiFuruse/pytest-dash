@@ -1,5 +1,6 @@
 from __future__ import print_function
 
+import os
 import runpy
 import threading
 import time
@@ -11,7 +12,6 @@ try:
     from queue import Queue, Empty
 except ImportError:
     from Queue import Queue, Empty
-
 
 import pytest
 import flask
@@ -52,7 +52,6 @@ def _wait_for_client_app_started(driver):
 
 @pytest.fixture(scope='package')
 def percy_snapshot(selenium):
-
     loader = percy.ResourceLoader(webdriver=selenium)
     percy_runner = percy.Runner(loader=loader)
     percy_runner.initialize_build()
@@ -139,8 +138,9 @@ def dash_subprocess(selenium):
         out.close()
 
     def _sub(app_module):
-        server_path = '{}:app.server'.format(app_module)
-        print(server_path)
+        server_path = '{}:app.server'.format(
+            '.'.join(os.path.split(app_module.replace('.py', '')))
+        )
 
         status = None
         started = False
@@ -158,7 +158,7 @@ def dash_subprocess(selenium):
                              shell=is_windows,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
-        
+
         queue_thread = threading.Thread(
             target=_enqueue,
             args=(process.stdout,),
