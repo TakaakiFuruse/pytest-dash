@@ -47,7 +47,7 @@ def _stop_server():
 def _wait_for_client_app_started(driver):
     # Wait until the react-entry-point is loaded.
     WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, 'react-entry-point')))
+        EC.presence_of_element_located((By.ID, '_dash-app-content')))
 
 
 @pytest.fixture(scope='package')
