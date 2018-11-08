@@ -10,7 +10,10 @@ from dash.dependencies import Output, Input
 from dash.exceptions import PreventUpdate
 import dash_html_components as html
 
-from pytest_dash.tools import dash_threaded, dash_from_file, NoAppFoundError, dash_subprocess
+from pytest_dash.tools import \
+    dash_threaded, dash_from_file, NoAppFoundError, dash_subprocess
+from pytest_dash.utils import \
+    wait_for_text_to_equal, wait_for_element_by_css_selector
 
 
 def test_dash_threaded(dash_threaded, selenium):
@@ -34,11 +37,11 @@ def test_dash_threaded(dash_threaded, selenium):
 
     dash_threaded(app)
 
-    clicker = selenium.find_element_by_id('clicker')
+    clicker = wait_for_element_by_css_selector(selenium, '#clicker')
 
     for i in range(6):
         clicker.click()
-        time.sleep(1)
+        wait_for_text_to_equal(selenium, '#output', str(i + 1))
 
     assert call_count.qsize() == 7
 
@@ -60,3 +63,5 @@ def test_subprocess(dash_subprocess, selenium):
     value_input = selenium.find_element_by_id('value')
     value_input.clear()
     value_input.send_keys('Hello dash subprocess')
+
+    wait_for_text_to_equal(selenium, '#out', 'Hello dash subprocess')
