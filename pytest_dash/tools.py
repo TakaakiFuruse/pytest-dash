@@ -7,6 +7,7 @@ import time
 import sys
 import subprocess
 import shlex
+import uuid
 
 try:
     from queue import Queue, Empty
@@ -74,9 +75,11 @@ def dash_threaded(selenium):
     :return:
     """
 
+    stop_route = '/_stop-{}'.format(uuid.uuid4().hex)
+
     def create_app(app):
-        if '/stop' not in app.server.view_functions:
-            app.server.add_url_rule('/stop', '/stop', _stop_server)
+
+        app.server.add_url_rule(stop_route, stop_route, _stop_server)
 
         def run():
             app.scripts.config.serve_locally = True
@@ -95,7 +98,7 @@ def dash_threaded(selenium):
     yield create_app
 
     # Stop the server in teardown
-    requests.get('http://localhost:8050/stop')
+    requests.get('http://localhost:8050{}'.format(stop_route))
 
 
 @pytest.fixture
