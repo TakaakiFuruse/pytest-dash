@@ -1,7 +1,6 @@
 from __future__ import print_function
 
 import os
-import runpy
 import threading
 import time
 import sys
@@ -22,21 +21,6 @@ import percy
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.select import By
-
-
-class NoAppFoundError(Exception):
-    """No `app` was found in the file."""
-
-
-def import_app(app_file):
-    try:
-        app_module = runpy.run_path(app_file)
-        app = app_module['app']
-    except KeyError:
-        raise NoAppFoundError(
-            'No dash `app` instance was found in {}'.format(app_file)
-        )
-    return app
 
 
 def _stop_server():
