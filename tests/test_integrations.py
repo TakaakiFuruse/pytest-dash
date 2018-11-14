@@ -1,5 +1,3 @@
-import time
-
 try:
     from queue import Queue, Empty
 except ImportError:
@@ -58,7 +56,7 @@ def test_no_app_found():
 
 
 def test_subprocess(dash_subprocess, selenium):
-    dash_subprocess('test_apps/simple_app')
+    dash_subprocess('test_apps.simple_app')
 
     value_input = selenium.find_element_by_id('value')
     value_input.clear()

@@ -97,10 +97,8 @@ def dash_subprocess(selenium):
             namespace['queue'].put(line)
         out.close()
 
-    def _sub(app_module):
-        server_path = '{}:app.server'.format(
-            '.'.join(os.path.split(app_module.replace('.py', '')))
-        )
+    def _sub(app_module, server_instance='app.server'):
+        server_path = '{}:{}'.format(app_module, server_instance)
 
         status = None
         started = False
