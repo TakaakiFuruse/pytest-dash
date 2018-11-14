@@ -113,7 +113,6 @@ def dash_subprocess(selenium):
         process = namespace['process'] = \
             subprocess.Popen(line,
                              bufsize=1,
-                             creationflags=subprocess.CREATE_NEW_PROCESS_GROUP,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
 
