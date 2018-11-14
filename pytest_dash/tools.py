@@ -86,15 +86,6 @@ def dash_threaded(selenium):
 
 
 @pytest.fixture
-def dash_from_file():
-    """
-    Import a dash app from a filepath, the imported file must have a Dash
-    instance named `app`
-    """
-    yield import_app
-
-
-@pytest.fixture
 def dash_subprocess(selenium):
     namespace = {
         'process': None,

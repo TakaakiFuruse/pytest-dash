@@ -10,10 +10,10 @@ from dash.dependencies import Output, Input
 from dash.exceptions import PreventUpdate
 import dash_html_components as html
 
-from pytest_dash.tools import \
-    dash_threaded, dash_from_file, NoAppFoundError, dash_subprocess
+from pytest_dash.tools import dash_threaded, dash_subprocess
+from pytest_dash.errors import NoAppFoundError
 from pytest_dash.utils import \
-    wait_for_text_to_equal, wait_for_element_by_css_selector
+    wait_for_text_to_equal, wait_for_element_by_css_selector, import_app
 
 
 def test_dash_threaded(dash_threaded, selenium):
@@ -46,11 +46,11 @@ def test_dash_threaded(dash_threaded, selenium):
     assert call_count.qsize() == 7
 
 
-def test_no_app_found(dash_from_file):
+def test_no_app_found():
     error = None
 
     try:
-        app = dash_from_file('test_apps/bad.py')
+        app = import_app('test_apps/bad.py')
     except NoAppFoundError as e:
         error = e
 
