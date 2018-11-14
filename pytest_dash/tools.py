@@ -111,24 +111,6 @@ def dash_from_file():
 
 
 @pytest.fixture
-def dash_app(dash_threaded):
-    """
-    Import a dash app from a file, then start the process.
-
-    :param dash_from_file:
-    :param start_dash:
-    :return:
-    """
-
-    def _starter(app_file):
-        app = import_app(app_file)
-        dash_threaded(app)
-        return app
-
-    yield _starter
-
-
-@pytest.fixture
 def dash_subprocess(selenium):
     namespace = {
         'process': None,
