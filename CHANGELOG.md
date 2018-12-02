@@ -3,9 +3,20 @@
 Versions follow [Semantic Versioning](https://www.semver.org)
 
 ## [0.2.0] 2018-11-07
+
+[#8](https://github.com/T4rk1n/pytest-dash/pull/8)
+
 ### Added
 
-- Added dash_subprocess fixture, runs a dash app in a subprocess waitress-serve command. [#8](https://github.com/T4rk1n/pytest-dash/pull/8)
+- Added `dash_subprocess` fixture, runs a dash app in a subprocess waitress-serve command.
+- `utils.wait_for_text_to_equal`
+- `utils.wait_for_element_by_css_selector`
+
+### Removed
+- `dash_app` fixture.
+
+### Renamed
+- `start_dash` fixture to `dash_threaded`
 
 ## [0.1.3] 2018-10-04
 ### Fixed
