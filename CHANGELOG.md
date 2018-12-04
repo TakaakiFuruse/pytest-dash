@@ -2,7 +2,7 @@
 
 Versions follow [Semantic Versioning](https://www.semver.org)
 
-## [0.2.0] 2018-11-07
+## [1.0.0] 2018-12-04
 
 [#8](https://github.com/T4rk1n/pytest-dash/pull/8)
 
