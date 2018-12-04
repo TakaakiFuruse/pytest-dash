@@ -52,6 +52,8 @@ def test_app(dash_threaded, selenium):
 
 #### `dash_subprocess`
 
+**experimental**
+
 Start an `app` instance contained in a module with waitress-serve in a
 subprocess. Kill the process in teardown.
 
