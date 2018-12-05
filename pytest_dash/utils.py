@@ -31,7 +31,7 @@ def wait_for_text_to_equal(driver, selector, text, timeout=10):
 
 def import_app(app_file):
     try:
-        app_module = runpy.run_path(app_file)
+        app_module = runpy.run_module(app_file)
         app = app_module['app']
     except KeyError:
         raise NoAppFoundError(
