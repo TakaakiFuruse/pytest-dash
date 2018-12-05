@@ -2,6 +2,13 @@
 
 Versions follow [Semantic Versioning](https://www.semver.org)
 
+## [1.0.1] 2018-12-05
+### Fixed
+- Fixed `utils.import_app` imported methods not having access to imports. [#12](https://github.com/T4rk1n/pytest-dash/pull/11)
+
+### Changed
+- Syntax for `utils.import_app` changed to dot notation, same as `dash_subprocess`.
+
 ## [1.0.0] 2018-12-04
 
 [#8](https://github.com/T4rk1n/pytest-dash/pull/8)
