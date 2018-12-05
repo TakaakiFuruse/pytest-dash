@@ -45,7 +45,7 @@ def test_dash_threaded(dash_threaded, selenium):
 
 
 def test_imported_app(dash_threaded, selenium):
-    app = import_app('test_apps/simple_app.py')
+    app = import_app('test_apps.simple_app')
     dash_threaded(app)
 
     value_input = selenium.find_element_by_id('value')
@@ -59,7 +59,7 @@ def test_no_app_found():
     error = None
 
     try:
-        app = import_app('test_apps/bad.py')
+        app = import_app('test_apps.bad')
     except NoAppFoundError as e:
         error = e
 
