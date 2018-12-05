@@ -44,6 +44,17 @@ def test_dash_threaded(dash_threaded, selenium):
     assert call_count.qsize() == 7
 
 
+def test_imported_app(dash_threaded, selenium):
+    app = import_app('test_apps/simple_app.py')
+    dash_threaded(app)
+
+    value_input = selenium.find_element_by_id('value')
+    value_input.clear()
+    value_input.send_keys('Hello imported dash')
+
+    wait_for_text_to_equal(selenium, '#out', 'Hello imported dash')
+
+
 def test_no_app_found():
     error = None
 

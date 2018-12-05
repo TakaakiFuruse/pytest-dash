@@ -1,4 +1,5 @@
 import dash
+import flask
 
 import dash_html_components as html
 import dash_core_components as dcc
@@ -17,7 +18,8 @@ app.layout = html.Div([
 def on_value(value):
     if value is None:
         raise PreventUpdate
+
+    # There's an issue with flask and runpy
+    # When run with `runpy.run_path`, flask will be None in the methods.
+    req = flask.request.headers
     return value
-
-
-
