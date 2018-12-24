@@ -45,6 +45,7 @@ def test_dash_threaded(dash_threaded, selenium):
     assert call_count.qsize() == 7
 
 
+@pytest.mark.skip(reason='Bugged because of #15')
 def test_imported_app(dash_threaded, selenium):
     app = import_app('test_apps.simple_app')
     dash_threaded(app)
