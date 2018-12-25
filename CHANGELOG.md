@@ -2,14 +2,14 @@
 
 Versions follow [Semantic Versioning](https://www.semver.org)
 
-## [UNRELEASED]
-
-### 2018-12-24 [#23](https://github.com/T4rk1n/pytest-dash/pull/23)
+## [UNRELEASED] 2018-12-24
 ### Added
-- Base exception type: `PytestDashError`
-- `DashAppLoadingError`
+- Base exception type: `PytestDashError` [#23](https://github.com/T4rk1n/pytest-dash/pull/23)
+- `DashAppLoadingError` [#23](https://github.com/T4rk1n/pytest-dash/pull/23)
   - Display the body html
   - Display console logs
+- Add port option to `dash_threaded` and `dash_subprocess`. [#28](https://github.com/T4rk1n/pytest-dash/pull/23)
+- Add `start_wait_time` option to `dash_threadred` for waiting after starting the thread, default to 1 sec. [#28](https://github.com/T4rk1n/pytest-dash/pull/23)
 
 ## [1.0.1] 2018-12-05
 ### Fixed
