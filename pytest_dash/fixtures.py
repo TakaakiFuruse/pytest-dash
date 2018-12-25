@@ -75,7 +75,7 @@ def dash_threaded(selenium):
         url='http://localhost:{}'
     )
 
-    def create_app(app, port=8050):
+    def create_app(app, port=8050, start_wait_time=1):
 
         app.server.add_url_rule(stop_route, stop_route, _stop_server)
         ns['port'] = port
@@ -89,6 +89,7 @@ def dash_threaded(selenium):
         t = threading.Thread(target=run)
         t.daemon = True
         t.start()
+        time.sleep(start_wait_time)
         selenium.get(ns['url'])
         _wait_for_client_app_started(selenium)
 
