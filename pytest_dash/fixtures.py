@@ -1,12 +1,14 @@
 from __future__ import print_function
 
-import os
+import pprint
 import threading
 import time
 import sys
 import subprocess
 import shlex
 import uuid
+
+from selenium.common.exceptions import TimeoutException
 
 try:
     from queue import Queue, Empty
@@ -18,9 +20,9 @@ import flask
 import requests
 import percy
 
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.select import By
+from pytest_dash.errors import DashAppLoadingError
+from pytest_dash.utils import wait_for_element_by_css_selector
+
 
 
 def _stop_server():
@@ -31,8 +33,17 @@ def _stop_server():
 
 def _wait_for_client_app_started(driver):
     # Wait until the react-entry-point is loaded.
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, '_dash-app-content')))
+    try:
+        wait_for_element_by_css_selector(driver, '#_dash-app-content')
+    except TimeoutException:
+        body = wait_for_element_by_css_selector(driver, 'body')
+        logs = driver.get_log('browser')
+        raise DashAppLoadingError(
+            'Dash could not start: \nHTML:\n {}\n\nLOGS: {}'.format(
+                body.get_property('innerHTML'),
+                pprint.pformat(logs)
+            )
+        )
 
 
 @pytest.fixture(scope='package')
