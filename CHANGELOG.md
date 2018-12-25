@@ -2,6 +2,15 @@
 
 Versions follow [Semantic Versioning](https://www.semver.org)
 
+## [UNRELEASED]
+
+### 2018-12-24 [#23](https://github.com/T4rk1n/pytest-dash/pull/23)
+### Added
+- Base exception type: `PytestDashError`
+- `DashAppLoadingError`
+  - Display the body html
+  - Display console logs
+
 ## [1.0.1] 2018-12-05
 ### Fixed
 - Fixed `utils.import_app` imported methods not having access to imports. [#12](https://github.com/T4rk1n/pytest-dash/pull/11)
