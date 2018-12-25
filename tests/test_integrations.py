@@ -35,7 +35,7 @@ def test_dash_threaded(dash_threaded, selenium):
         return n_clicks
 
     dash_threaded(app, port=8090)
-    assert ':8090' in selenium.current_url
+    assert 'http://localhost:8090' in selenium.current_url
 
     clicker = wait_for_element_by_css_selector(selenium, '#clicker')
 
@@ -71,7 +71,8 @@ def test_no_app_found():
 
 @pytest.mark.skip(reason='Not working on circle.')
 def test_subprocess(dash_subprocess, selenium):
-    dash_subprocess('test_apps.simple_app')
+    dash_subprocess('test_apps.simple_app', port=8080)
+    assert 'http://localhost:8080' in selenium.current_url
 
     value_input = selenium.find_element_by_id('value')
     value_input.clear()

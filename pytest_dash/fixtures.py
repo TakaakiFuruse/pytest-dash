@@ -105,7 +105,8 @@ def dash_threaded(selenium):
 def dash_subprocess(selenium):
     namespace = {
         'process': None,
-        'queue': Queue()
+        'queue': Queue(),
+        'port': 8050
     }
 
     def _enqueue(out):
@@ -113,14 +114,16 @@ def dash_subprocess(selenium):
             namespace['queue'].put(line)
         out.close()
 
-    def _sub(app_module, server_instance='app.server'):
+    def _sub(app_module, server_instance='app.server', port=8050):
         server_path = '{}:{}'.format(app_module, server_instance)
+        namespace['port'] = port
 
         status = None
         started = False
         is_windows = sys.platform == 'win32'
 
-        cmd = 'waitress-serve --listen=127.0.0.1:8050 {}'.format(
+        cmd = 'waitress-serve --listen=127.0.0.1:{} {}'.format(
+            port,
             server_path
         )
         line = shlex.split(cmd, posix=not is_windows)
@@ -155,7 +158,7 @@ def dash_subprocess(selenium):
             print(err.decode(), file=sys.stderr)
             raise Exception('Could not start the server.')
 
-        selenium.get('http://localhost:8050/')
+        selenium.get('http://localhost:{}/'.format(port))
         _wait_for_client_app_started(selenium)
 
     yield _sub
