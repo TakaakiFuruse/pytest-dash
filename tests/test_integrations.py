@@ -34,7 +34,8 @@ def test_dash_threaded(dash_threaded, selenium):
 
         return n_clicks
 
-    dash_threaded(app)
+    dash_threaded(app, port=8090)
+    assert ':8090' in selenium.current_url
 
     clicker = wait_for_element_by_css_selector(selenium, '#clicker')
 
