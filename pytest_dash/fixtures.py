@@ -24,7 +24,6 @@ from pytest_dash.errors import DashAppLoadingError
 from pytest_dash.utils import wait_for_element_by_css_selector
 
 
-
 def _stop_server():
     stopper = flask.request.environ['werkzeug.server.shutdown']
     stopper()
@@ -71,21 +70,26 @@ def dash_threaded(selenium):
     """
 
     stop_route = '/_stop-{}'.format(uuid.uuid4().hex)
+    ns = dict(
+        port=8050,
+        url='http://localhost:{}'
+    )
 
-    def create_app(app):
+    def create_app(app, port=8050):
 
         app.server.add_url_rule(stop_route, stop_route, _stop_server)
+        ns['port'] = port
+        ns['url'] = ns['url'].format(port)
 
         def run():
             app.scripts.config.serve_locally = True
             app.css.config.serve_locally = True
-            app.run_server(debug=False, port=8050, threaded=True)
+            app.run_server(debug=False, port=port, threaded=True)
 
         t = threading.Thread(target=run)
         t.daemon = True
         t.start()
-        time.sleep(3)
-        selenium.get('http://localhost:8050')
+        selenium.get(ns['url'])
         _wait_for_client_app_started(selenium)
 
         return app
@@ -93,7 +97,7 @@ def dash_threaded(selenium):
     yield create_app
 
     # Stop the server in teardown
-    requests.get('http://localhost:8050{}'.format(stop_route))
+    requests.get('{}{}'.format(ns['url'], stop_route))
 
 
 @pytest.fixture
