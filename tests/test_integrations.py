@@ -46,7 +46,8 @@ def test_dash_threaded(dash_threaded, selenium):
     assert call_count.qsize() == 7
 
 
-@pytest.mark.skip(reason='Bugged because of #15')
+@pytest.mark.skipif('os.environ.get("CIRCLECI")',
+                    reason='Bugged because of #15')
 def test_imported_app(dash_threaded, selenium):
     app = import_app('test_apps.simple_app')
     dash_threaded(app)
@@ -69,7 +70,8 @@ def test_no_app_found():
     assert isinstance(error, NoAppFoundError)
 
 
-@pytest.mark.skip(reason='Not working on circle.')
+@pytest.mark.skipif('os.environ.get("CIRCLECI")',
+                    reason='Not working on circle.')
 def test_subprocess(dash_subprocess, selenium):
     dash_subprocess('test_apps.simple_app', port=8080)
     assert 'http://localhost:8080' in selenium.current_url
