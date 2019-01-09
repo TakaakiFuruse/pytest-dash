@@ -12,8 +12,6 @@ from dash.exceptions import PreventUpdate
 import dash_html_components as html
 
 # pylint: disable=unused-import
-from pytest_dash.fixtures import dash_threaded, dash_subprocess  # noqa F401
-from pytest_dash.errors import NoAppFoundError, DashAppLoadingError
 from pytest_dash.utils import \
     wait_for_text_to_equal, wait_for_element_by_css_selector, import_app
 
@@ -48,14 +46,6 @@ def test_dash_threaded(dash_threaded, selenium):
     assert call_count.qsize() == 7
 
 
-def test_invalid_start_raises(dash_threaded):
-    app = dash.Dash(__name__)
-
-    # Start the server without setting the layout.
-    with pytest.raises(DashAppLoadingError):
-        dash_threaded(app, start_timeout=1)
-
-
 @pytest.mark.skipif(
     'os.environ.get("CIRCLECI")', reason='Bugged because of #15'
 )
@@ -68,17 +58,6 @@ def test_imported_app(dash_threaded, selenium):
     value_input.send_keys('Hello imported dash')
 
     wait_for_text_to_equal(selenium, '#out', 'Hello imported dash')
-
-
-def test_no_app_found():
-    error = None
-
-    try:
-        import_app('test_apps.bad')
-    except NoAppFoundError as err:
-        error = err
-
-    assert isinstance(error, NoAppFoundError)
 
 
 def test_subprocess(dash_subprocess, selenium):
