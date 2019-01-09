@@ -14,11 +14,5 @@ def test_invalid_start_raises(dash_threaded):
 
 
 def test_no_app_found():
-    error = None
-
-    try:
-        import_app('test_apps.bad')
-    except NoAppFoundError as err:
-        error = err
-
-    assert isinstance(error, NoAppFoundError)
+    with pytest.raises(NoAppFoundError):
+        import_app('test_apps.invalid_app')
