@@ -10,8 +10,10 @@ by using :py:func:`~.wait_for.wait_for_text_to_equal`.
 .. code-block:: python
 
     import dash
-    import dash_html_components as html
     from dash.dependencies import Output, Input
+    from dash.exceptions import PreventUpdate
+
+    import dash_html_components as html
 
     from pytest_dash import wait_for
 
