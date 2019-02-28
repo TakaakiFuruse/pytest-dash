@@ -1,6 +1,6 @@
 # pytest-dash
 
-[Pytest][2] plugin for [Dash][1]. Pytest-dash aims to ease automated testing of dash application and components.
+[Pytest][2] plugin for [Dash][1]. Pytest-dash aims to ease automated testing of dash applications and components.
 
 [![CircleCI](https://circleci.com/gh/T4rk1n/pytest-dash.svg?style=svg)](https://circleci.com/gh/T4rk1n/pytest-dash)
 [![Documentation Status](https://readthedocs.org/projects/pytest-dash/badge/?version=latest)](https://pytest-dash.readthedocs.io/en/latest/?badge=latest)
