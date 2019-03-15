@@ -9,6 +9,7 @@ import subprocess
 import time
 import uuid
 import urllib
+from urllib.error import URLError
 import threading
 import sys
 
@@ -17,7 +18,6 @@ import requests
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.wait import WebDriverWait
-from urllib.error import URLError
 
 from pytest_dash import errors
 from pytest_dash.wait_for import _wait_for_client_app_started
