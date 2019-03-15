@@ -8,6 +8,7 @@ import shlex
 import subprocess
 import time
 import uuid
+import urllib
 import threading
 import sys
 
@@ -16,6 +17,7 @@ import requests
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support.wait import WebDriverWait
+from urllib.error import URLError
 
 from pytest_dash import errors
 from pytest_dash.wait_for import _wait_for_client_app_started
@@ -28,8 +30,6 @@ def _stop_server():
 
 
 def _assert_closed(driver):
-    import urllib
-    from urllib.error import URLError
     driver.refresh()
     try:
         urllib.request.urlopen(driver.current_url)
