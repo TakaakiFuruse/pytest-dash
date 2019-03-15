@@ -26,6 +26,7 @@ def _stop_server():
     stopper()
     return 'stop'
 
+
 def _assert_closed(driver):
     import urllib
     from urllib.error import URLError
@@ -35,6 +36,7 @@ def _assert_closed(driver):
     except URLError:
         return True
     return False
+
 
 def _handle_error(_):
     _stop_server()
