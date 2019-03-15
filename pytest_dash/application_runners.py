@@ -26,12 +26,15 @@ def _stop_server():
     stopper()
     return 'stop'
 
-
 def _assert_closed(driver):
+    import urllib
+    from urllib.error import URLError
     driver.refresh()
-    body = driver.find_element_by_css_selector('body').text
-    return 'refused to connect' in body or not body
-
+    try:
+        urllib.request.urlopen(driver.current_url)
+    except URLError:
+        return True
+    return False
 
 def _handle_error(_):
     _stop_server()
