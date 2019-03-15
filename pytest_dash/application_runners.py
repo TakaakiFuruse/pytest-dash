@@ -30,7 +30,6 @@ def _stop_server():
 
 
 def _assert_closed(driver):
-    driver.refresh()
     try:
         urllib.request.urlopen(driver.current_url)
     except URLError:
