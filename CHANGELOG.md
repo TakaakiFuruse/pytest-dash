@@ -2,6 +2,10 @@
 
 Versions follow [Semantic Versioning](https://www.semver.org)
 
+## [2.1.2] - 2019-03-18
+### Fixed
+- Fixed server closed assertion on non-english locales. [#70](https://github.com/T4rk1n/pytest-dash/pull/70)
+
 ## [2.1.1] - 2019-02-21
 ### Fixed
 - Fixed python 2 super call on subclasses of BaseDashRunner [#68](https://github.com/T4rk1n/pytest-dash/pull/66)
