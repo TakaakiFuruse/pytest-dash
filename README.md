@@ -22,7 +22,7 @@ For full documentation and examples, please see https://pytest-dash.readthedocs.
 
 ## Bugs/Suggestions
 
-For any bug, suggestion or request, please open a [GitHub issue](https://github.com/T4rk1n/pytest-dash/issues).
+For any bug, suggestion or request, please open a [GitHub issue](https://github.com/plotly/pytest-dash/issues).
 
 ## More resources
 
