@@ -197,7 +197,7 @@ def _wait_for_client_app_started(driver, url, wait_time=0.5, timeout=10):
         try:
             driver.get(url)
             wait_for_element_by_css_selector(
-                driver, '#_dash-app-content', timeout=wait_time
+                driver, '#react-entry-point', timeout=wait_time
             )
             return
         except TimeoutException:
